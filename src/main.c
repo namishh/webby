@@ -1,4 +1,4 @@
-#include "src/server/server.h"
+#include "server/server.h"
 #include "string.h"
 #include <stdio.h>
 #include <sys/socket.h>
