@@ -1,0 +1,5 @@
+simple web server in c
+
+cc main.c src/server/server.c src/http_request/http_request.c -o main ; ./main 
+
+i will prolly learn build systems soon.
