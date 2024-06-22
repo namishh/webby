@@ -42,6 +42,7 @@ void print_headers(struct Header *head) {
   }
 }
 
+// TODO: parse headers. i am blasting my head for this
 void parse_headers(char *header_fields) {
   char *token = NULL;
   token = strtok(header_fields, "\n");
@@ -77,5 +78,8 @@ struct Request request_constructor(char *string) {
 
   parse_headers(header_fields);
   print_headers(head);
+
+  request.request_headers_head = head;
+
   return request;
 }

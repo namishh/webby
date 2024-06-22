@@ -1,13 +1,12 @@
 #ifndef HTTP_REQUEST
 #define HTTP_REQUEST
 
-#include "../structures/hashmap.h"
-
 struct Request {
   char *method;
   char *URI;
   float HTTPVersion;
   char *body;
+  struct Header *request_headers_head;
 };
 
 struct Header {
