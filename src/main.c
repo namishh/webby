@@ -1,3 +1,4 @@
+#include "http_request/http_request.h"
 #include "server/server.h"
 #include "string.h"
 #include <stdio.h>
@@ -16,8 +17,8 @@ void start(struct Server *server) {
                         (socklen_t *)&addrlen);
     // read() -> read from a file descriptor
     read(new_socket, buffer, BUFFER_SIZE);
-    printf("Message: %s\n", buffer);
 
+    struct Request request = request_constructor(buffer);
     // write() -> write to a file descriptor
     write(new_socket, message, strlen(message));
 

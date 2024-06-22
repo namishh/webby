@@ -1,17 +1,24 @@
 #ifndef HTTP_REQUEST
 #define HTTP_REQUEST
 
-#include "../structures/dict.h"
-
-enum Methods { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, CONNECT, PATCH };
+#include "../structures/hashmap.h"
 
 struct Request {
-  int method;
+  char *method;
   char *URI;
   float HTTPVersion;
-  Dictionary *headers;
+  char *body;
+};
+
+struct Header {
+  char *key;
+  char *value;
+  struct Header *next;
 };
 
 struct Request request_constructor(char *string);
+void request_add_header(struct Header *head, char *key, char *value);
+struct Header *request_get_header(struct Header *head, char *key);
+void print_headers(struct Header *head);
 
 #endif // HTTP_REQUEST

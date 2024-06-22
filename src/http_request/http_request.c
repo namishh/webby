@@ -1,29 +1,53 @@
 #include "http_request.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// i hate this much if else but welp.
-int method_select(char *method) {
-  if (strcmp(method, "GET") == 0) {
-    return GET;
-  } else if (strcmp(method, "POST") == 0) {
-    return POST;
-  } else if (strcmp(method, "PUT") == 0) {
-    return PUT;
-  } else if (strcmp(method, "DELETE") == 0) {
-    return DELETE;
-  } else if (strcmp(method, "HEAD") == 0) {
-    return HEAD;
-  } else if (strcmp(method, "OPTIONS") == 0) {
-    return OPTIONS;
-  } else if (strcmp(method, "TRACE") == 0) {
-    return TRACE;
-  } else if (strcmp(method, "CONNECT") == 0) {
-    return CONNECT;
-  } else if (strcmp(method, "PATCH") == 0) {
-    return PATCH;
+struct Header *head;
+
+void request_add_header(struct Header *head, char *key, char *value) {
+  struct Header *temp = (struct Header *)malloc(sizeof(struct Header));
+  temp->key = key;
+  temp->value = value;
+  temp->next = NULL;
+  if (head == NULL) {
+    head = temp;
+    return;
+  } else {
+    struct Header *temp2 = head;
+    while (temp2->next != NULL) {
+      temp2 = temp2->next;
+    }
+    temp2->next = temp;
   }
-  return -1;
+}
+
+struct Header *request_get_header(struct Header *head, char *key) {
+  struct Header *temp = head;
+  while (temp != NULL) {
+    if (strcmp(temp->key, key) == 0) {
+      return temp;
+    }
+    temp = temp->next;
+  }
+  return NULL;
+}
+
+void print_headers(struct Header *head) {
+  struct Header *temp = head;
+  printf("===========Headers==========\n");
+  while (temp != NULL) {
+    printf("%s: %s\n", temp->key, temp->value);
+    temp = temp->next;
+  }
+}
+
+void parse_headers(char *header_fields) {
+  char *token = NULL;
+  token = strtok(header_fields, "\n");
+  while (token) {
+    token = strtok(NULL, "\n");
+  }
 }
 
 struct Request request_constructor(char *string) {
@@ -47,19 +71,11 @@ struct Request request_constructor(char *string) {
   HTTPVersion = strtok(HTTPVersion, "/");
   HTTPVersion = strtok(NULL, "/");
 
-  request.method = method_select(method);
+  request.method = method;
   request.URI = URI;
   request.HTTPVersion = (float)atof(HTTPVersion);
 
-  request.headers = dictionary_constructor();
-
-  char *token = strtok(header_fields, "\n");
-  while (token) {
-    char *key = strtok(token, ":");
-    char *value = strtok(NULL, "\n");
-    dictionary_set(request.headers, key, value);
-    token = strtok(NULL, "\n");
-  }
-
+  parse_headers(header_fields);
+  print_headers(head);
   return request;
 }
