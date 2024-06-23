@@ -3,9 +3,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Header *head;
+struct Header *head = NULL;
+struct HeaderString *heads = NULL;
 
-void request_add_header(struct Header *head, char *key, char *value) {
+void request_add_headerstring(char *string) {
+  struct HeaderString *temp =
+      (struct HeaderString *)malloc(sizeof(struct HeaderString));
+  temp->next = NULL;
+  temp->string = strdup(string);
+  if (heads == NULL) {
+    heads = temp;
+    return;
+  } else {
+    struct HeaderString *temp2 = heads;
+    while (temp2->next != NULL) {
+      temp2 = temp2->next;
+    }
+    temp2->next = temp;
+  }
+}
+
+void request_add_header(char *key, char *value) {
   struct Header *temp = (struct Header *)malloc(sizeof(struct Header));
   temp->key = key;
   temp->value = value;
@@ -33,7 +51,7 @@ struct Header *request_get_header(struct Header *head, char *key) {
   return NULL;
 }
 
-void print_headers(struct Header *head) {
+void print_headers() {
   struct Header *temp = head;
   printf("===========Headers==========\n");
   while (temp != NULL) {
@@ -42,12 +60,27 @@ void print_headers(struct Header *head) {
   }
 }
 
-// TODO: parse headers. i am blasting my head for this
+// DONE: parse headers. i am blasting my head for this
 void parse_headers(char *header_fields) {
-  char *token = NULL;
-  token = strtok(header_fields, "\n");
-  while (token) {
-    token = strtok(NULL, "\n");
+  char fields[strlen(header_fields)];
+  strcpy(fields, header_fields);
+  char *field = strtok(fields, "\n");
+  while (field) {
+    if (field[0] == '\n') {
+      continue;
+    }
+    char f[strlen(field)];
+    strcpy(f, field);
+    request_add_headerstring(field);
+    field = strtok(NULL, "\n");
+  }
+  struct HeaderString *temp = heads;
+  while (temp != NULL) {
+    char *field = strtok(temp->string, ":");
+    char *key = field;
+    char *value = strtok(NULL, "\0");
+    request_add_header(key, value);
+    temp = temp->next;
   }
 }
 
@@ -77,9 +110,9 @@ struct Request request_constructor(char *string) {
   request.HTTPVersion = (float)atof(HTTPVersion);
 
   parse_headers(header_fields);
-  print_headers(head);
 
   request.request_headers_head = head;
+  print_headers();
 
   return request;
 }

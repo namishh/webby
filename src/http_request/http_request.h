@@ -15,9 +15,14 @@ struct Header {
   struct Header *next;
 };
 
+struct HeaderString {
+  char *string;
+  struct HeaderString *next;
+};
+
 struct Request request_constructor(char *string);
-void request_add_header(struct Header *head, char *key, char *value);
+void request_add_header(char *key, char *value);
 struct Header *request_get_header(struct Header *head, char *key);
-void print_headers(struct Header *head);
+void print_headers();
 
 #endif // HTTP_REQUEST
