@@ -1,10 +1,20 @@
 #include "http_request.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 struct Header *head = NULL;
 struct HeaderString *heads = NULL;
+
+int is_only_whitespace_or_escape(char *string) {
+  for (int i = 0; i < strlen(string); i++) {
+    if (!isspace(string[i])) {
+      return 0;
+    }
+  }
+  return 1;
+}
 
 void request_add_headerstring(char *string) {
   struct HeaderString *temp =
@@ -58,6 +68,7 @@ void print_headers() {
     printf("%s: %s\n", temp->key, temp->value);
     temp = temp->next;
   }
+  printf("============================\n");
 }
 
 // DONE: parse headers. i am blasting my head for this
@@ -67,8 +78,8 @@ void parse_headers(char *header_fields) {
   char *field = strtok(fields, "\n");
   // First parse out the wholes lines
   while (field) {
-    if (field[0] == '\n') {
-      continue;
+    if (is_only_whitespace_or_escape(field)) {
+      break;
     }
     char f[strlen(field)];
     strcpy(f, field);
@@ -80,6 +91,10 @@ void parse_headers(char *header_fields) {
   while (temp != NULL) {
     char *field = strtok(temp->string, ":");
     char *key = field;
+    // if key is null, then break
+    if (key == NULL) {
+      break;
+    }
     char *value = strtok(NULL, "\0");
     request_add_header(key, value);
     temp = temp->next;
@@ -97,7 +112,6 @@ struct Request request_constructor(char *string) {
   char *header_fields =
       strtok(NULL, "|"); // NULL means continue using the line we were using
   char *body = strtok(NULL, "\n");
-
   struct Request request;
 
   // stirng parsing :sob:
@@ -110,6 +124,10 @@ struct Request request_constructor(char *string) {
   request.method = method;
   request.URI = URI;
   request.HTTPVersion = (float)atof(HTTPVersion);
+  if (body == NULL) {
+    body = "";
+  }
+  request.body = strdup(body);
 
   parse_headers(header_fields);
 

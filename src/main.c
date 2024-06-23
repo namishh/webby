@@ -36,12 +36,13 @@ void start(struct Server *server) {
     strcat(message, response->body);
     strcat(message, "\r\n\r\n");
 
-    send(new_socket, message, sizeof(message), 0);
+    send(new_socket, message, strlen(message), 0);
 
     // close the new_socket
     close(new_socket);
-    free(message);
+    free(route);
     free(response);
+    free(message);
   }
 }
 

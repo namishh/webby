@@ -26,7 +26,7 @@ char *render_file(char *filename, struct Response *response) {
 struct Response *response_constructor(char *route, struct Request request,
                                       struct Route *root) {
   struct Route *r = search(root, route);
-  char *filename;
+  char filename[100];
   sprintf(filename, "./public/%s", r->value);
   printf("%s\n", filename);
   struct Response *response = malloc(sizeof(struct Response));
