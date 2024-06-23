@@ -132,7 +132,7 @@ struct Request request_constructor(char *string) {
   parse_headers(header_fields);
 
   request.request_headers_head = head;
-  print_headers();
+  // print_headers();
 
   return request;
 }

@@ -9,7 +9,8 @@ struct Response {
   char *body;
 };
 
-struct Response *response_constructor(char *route, struct Request request);
-char *render_file(char *filename, struct Response *response);
+struct Response response_constructor(char *route, char *filename,
+                                     struct Request request);
+char *render_file(char *filename);
 
 #endif // RESPONSE_H

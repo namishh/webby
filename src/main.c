@@ -11,8 +11,7 @@ void start(struct Server *server) {
   char buffer[BUFFER_SIZE];
   int new_socket;
   int addrlen = sizeof(server->address);
-  struct Route *route = NULL;
-  add_route("/index", "index.html");
+  add_route("/", "index.html");
   add_route("/about", "about.html");
   inorder();
   while (1) {
@@ -26,23 +25,33 @@ void start(struct Server *server) {
     struct Request request = request_constructor(buffer);
     printf("Route: %s\n", request.URI);
 
-    struct Response *response = response_constructor(request.URI, request);
-    //  printf("Status: %s\n", response->status);
-    //  printf("Body: %s\n", response->body);
+    char *status = "HTTP/1.1 200 OK\r\n\r\n";
+    char *file;
 
-    char *message =
-        malloc(sizeof(unsigned char) *
-               (strlen(response->status) + strlen(response->body) + 1));
-    snprintf(message, strlen(response->status) + strlen(response->body) + 1,
-             "%s%s", response->status, response->body);
-    printf("Message: %s\n", message);
-    send(new_socket, message, sizeof(message), 0);
+    struct Route *route = search(request.URI);
+    if (route == NULL) {
+      status = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
+      file = "./public/404.html";
+      printf("Route not found\n");
+    } else {
+      char filename[100];
+      snprintf(filename, 100, "./public/%s", route->value);
+      printf("Route found %s\n", filename);
+      file = strdup(filename);
+    }
+
+    struct Response response = response_constructor(status, file, request);
+    printf("Status: %s\n", response.status);
+    printf("Body: %s\n", response.body);
+
+    char *message = malloc(sizeof(unsigned char) * (strlen(response.status) +
+                                                    strlen(response.body) + 1));
+    sprintf(message, "%s%s", response.status, response.body);
+
+    send(new_socket, message, strlen(message), 0);
 
     // close the new_socket
     close(new_socket);
-    free(route);
-    free(response);
-    free(message);
   }
 }
 

@@ -22,6 +22,7 @@ void add_route(char *key, char *value) {
 
 struct Route *search(char *key) {
   struct Route *temp = routehead;
+
   while (temp != NULL) {
     if (strcmp(temp->key, key) == 0) {
       return temp;
