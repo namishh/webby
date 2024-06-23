@@ -29,14 +29,16 @@ void start(struct Server *server) {
 
     struct Response *response =
         response_constructor(request.URI, request, route);
-    printf("Status: %s\n", response->status);
-    printf("Body: %s\n", response->body);
+    //  printf("Status: %s\n", response->status);
+    //  printf("Body: %s\n", response->body);
 
-    char *message = strdup(response->status);
-    strcat(message, response->body);
-    strcat(message, "\r\n\r\n");
-
-    send(new_socket, message, strlen(message), 0);
+    char *message =
+        malloc(sizeof(unsigned char) *
+               (strlen(response->status) + strlen(response->body) + 1));
+    snprintf(message, strlen(response->status) + strlen(response->body) + 1,
+             "%s%s", response->status, response->body);
+    printf("Message: %s\n", message);
+    send(new_socket, message, sizeof(message), 0);
 
     // close the new_socket
     close(new_socket);

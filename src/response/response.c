@@ -25,6 +25,7 @@ char *render_file(char *filename, struct Response *response) {
 
 struct Response *response_constructor(char *route, struct Request request,
                                       struct Route *root) {
+  printf("Route 3: %s\n", route);
   struct Route *r = search(root, route);
   char filename[100];
   sprintf(filename, "./public/%s", r->value);

@@ -1,2 +1,3 @@
 build
 valgrind.log
+valgrind.log.*

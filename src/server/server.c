@@ -26,6 +26,8 @@ struct Server server_constructor(int domain, int service, int protocol,
   domain -> communication domain service -> communication
   semantics protocol -> communication protocol
   */
+  int reuse = 1;
+
   server.sock = socket(domain, service, protocol);
 
   if (server.sock == 0) {
@@ -33,6 +35,10 @@ struct Server server_constructor(int domain, int service, int protocol,
     perror("Failed to create Socket");
     exit(1); // irregular exiting of the program
   }
+
+  if (setsockopt(server.sock, SOL_SOCKET, SO_REUSEADDR, &(int){1},
+                 sizeof(int)) < 0)
+    perror("setsockopt(SO_REUSEADDR) failed");
 
   // bind() -> binds sockets to a network
   int b = bind(server.sock, (struct sockaddr *)&server.address,
