@@ -24,12 +24,13 @@ struct Response *response_constructor(char *route, struct Request request) {
   struct Response *response = malloc(sizeof(struct Response));
   struct Route *r = search(route);
 
-  if (r == NULL) {
+  if (r->value == NULL) {
     sprintf(filename, "./public/404.html");
     response->status = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
     response->body = render_file(filename, response);
   }
 
+  snprintf(filename, 100, "./public/%s", r->value);
   response->status = "HTTP/1.1 200 OK\r\n\r\n";
   response->body = render_file(filename, response);
   printf("%s\n", filename);
