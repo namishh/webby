@@ -1,40 +1,40 @@
 #include "routing.h"
-#include "stdio.h"
+#include <stdio.h>
 
-struct Route *initRoute(char *key, char *value) {
+struct Route *routehead = NULL;
+
+void add_route(char *key, char *value) {
   struct Route *temp = (struct Route *)malloc(sizeof(struct Route));
   temp->key = key;
   temp->value = value;
-  temp->left = temp->right = NULL;
-  return temp;
-}
-
-void inorder(struct Route *root) {
-  if (root != NULL) {
-    inorder(root->left);
-    printf("%s -> %s \n", root->key, root->value);
-    inorder(root->right);
+  temp->next = NULL;
+  if (routehead == NULL) {
+    routehead = temp;
+    return;
+  } else {
+    struct Route *temp2 = routehead;
+    while (temp2->next != NULL) {
+      temp2 = temp2->next;
+    }
+    temp2->next = temp;
   }
 }
 
-struct Route *addRoute(struct Route *root, char *key, char *value) {
-  if (root == NULL) {
-    return initRoute(key, value);
+struct Route *search(char *key) {
+  struct Route *temp = routehead;
+  while (temp != NULL) {
+    if (strcmp(temp->key, key) == 0) {
+      return temp;
+    }
+    temp = temp->next;
   }
-  if (strcmp(key, root->key) < 0) {
-    root->left = addRoute(root->left, key, value);
-  } else if (strcmp(key, root->key) > 0) {
-    root->right = addRoute(root->right, key, value);
-  }
-  return root;
+  return NULL;
 }
 
-struct Route *search(struct Route *root, char *key) {
-  if (root == NULL || strcmp(root->key, key) == 0) {
-    return root;
+void inorder() {
+  struct Route *temp = routehead;
+  while (temp != NULL) {
+    printf("Key: %s, Value: %s\n", temp->key, temp->value);
+    temp = temp->next;
   }
-  if (strcmp(root->key, key) < 0) {
-    return search(root->right, key);
-  }
-  return search(root->left, key);
 }

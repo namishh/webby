@@ -23,15 +23,17 @@ char *render_file(char *filename, struct Response *response) {
   return temp;
 }
 
-struct Response *response_constructor(char *route, struct Request request,
-                                      struct Route *root) {
-  printf("Route 3: %s\n", route);
-  struct Route *r = search(root, route);
+struct Response *response_constructor(char *route, struct Request request) {
   char filename[100];
-  sprintf(filename, "./public/%s", r->value);
-  printf("%s\n", filename);
   struct Response *response = malloc(sizeof(struct Response));
+  struct Route *r = search(route);
+  if (r == NULL) {
+    sprintf(filename, "./public/404.html");
+    response->status = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
+    response->body = render_file(filename, response);
+  }
   response->status = "HTTP/1.1 200 OK\r\n\r\n";
   response->body = render_file(filename, response);
+  printf("%s\n", filename);
   return response;
 }
