@@ -10,8 +10,8 @@ $ ./build/main.out
 ```
 
 ### todo / future plans
-[ ] fix the life of the server 
-[ ] get/post requests
+- [ ] fix the life of the server 
+- [ ] get/post requests
 
-after that i would probably seem to make it a functional web app out of it.
+after that i would probably seem to make it a functional web app out of it. <br>
 something like a todo app. after deciding i will update this todo list for further goals.
