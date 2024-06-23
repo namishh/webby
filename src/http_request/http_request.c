@@ -50,7 +50,7 @@ void request_add_header(char *key, char *value) {
   }
 }
 
-struct Header *request_get_header(struct Header *head, char *key) {
+struct Header *request_get_header(char *key) {
   struct Header *temp = head;
   while (temp != NULL) {
     if (strcmp(temp->key, key) == 0) {

@@ -4,10 +4,6 @@
 
 char *render_file(char *filename, struct Response *response) {
   FILE *file = fopen(filename, "r");
-  if (file == NULL) {
-    response->status = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
-    file = fopen("./public/404.html", "r");
-  }
   fseek(file, 0, SEEK_END);
   long fsize = ftell(file);
   fseek(file, 0, SEEK_SET);
@@ -27,11 +23,13 @@ struct Response *response_constructor(char *route, struct Request request) {
   char filename[100];
   struct Response *response = malloc(sizeof(struct Response));
   struct Route *r = search(route);
+
   if (r == NULL) {
     sprintf(filename, "./public/404.html");
     response->status = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
     response->body = render_file(filename, response);
   }
+
   response->status = "HTTP/1.1 200 OK\r\n\r\n";
   response->body = render_file(filename, response);
   printf("%s\n", filename);

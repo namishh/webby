@@ -22,7 +22,7 @@ struct HeaderString {
 
 struct Request request_constructor(char *string);
 void request_add_header(char *key, char *value);
-struct Header *request_get_header(struct Header *head, char *key);
+struct Header *request_get_header(char *key);
 void print_headers();
 
 #endif // HTTP_REQUEST
