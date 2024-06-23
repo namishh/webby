@@ -1,4 +1,6 @@
 #include "http_request/http_request.h"
+#include "response/response.h"
+#include "routing/routing.h"
 #include "server/server.h"
 #include "string.h"
 #include <stdio.h>
@@ -7,9 +9,13 @@
 
 void start(struct Server *server) {
   char buffer[BUFFER_SIZE];
-  char *message = "Hello from the server!";
   int new_socket;
   int addrlen = sizeof(server->address);
+
+  struct Route *route = initRoute("/", "index.html");
+  addRoute(route, "/about", "about.html");
+  inorder(route);
+
   while (1) {
     printf("Waitng for connections...\n");
     // accept() -> accepts a connection on a socket.
@@ -19,11 +25,23 @@ void start(struct Server *server) {
     read(new_socket, buffer, BUFFER_SIZE);
 
     struct Request request = request_constructor(buffer);
-    // write() -> write to a file descriptor
-    write(new_socket, message, strlen(message));
+    printf("Route: %s\n", request.URI);
+
+    struct Response *response =
+        response_constructor(request.URI, request, route);
+    printf("Status: %s\n", response->status);
+    printf("Body: %s\n", response->body);
+
+    char *message = strdup(response->status);
+    strcat(message, response->body);
+    strcat(message, "\r\n\r\n");
+
+    send(new_socket, message, sizeof(message), 0);
 
     // close the new_socket
     close(new_socket);
+    free(message);
+    free(response);
   }
 }
 

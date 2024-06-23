@@ -65,6 +65,7 @@ void parse_headers(char *header_fields) {
   char fields[strlen(header_fields)];
   strcpy(fields, header_fields);
   char *field = strtok(fields, "\n");
+  // First parse out the wholes lines
   while (field) {
     if (field[0] == '\n') {
       continue;
@@ -74,6 +75,7 @@ void parse_headers(char *header_fields) {
     request_add_headerstring(field);
     field = strtok(NULL, "\n");
   }
+  // And then parse out the key value pairs
   struct HeaderString *temp = heads;
   while (temp != NULL) {
     char *field = strtok(temp->string, ":");
