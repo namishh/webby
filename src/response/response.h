@@ -7,10 +7,11 @@
 struct Response {
   char *status;
   char *body;
+  size_t size;
 };
 
 struct Response response_constructor(char *route, char *filename,
-                                     struct Request request);
+                                     struct Request request, char *status);
 char *render_file(char *filename);
 
 #endif // RESPONSE_H

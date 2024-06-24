@@ -71,6 +71,16 @@ void print_headers() {
   printf("============================\n");
 }
 
+void print_headerstrings() {
+  struct HeaderString *temp = heads;
+  printf("===========HeaderStrings==========\n");
+  while (temp != NULL) {
+    printf("%s\n", temp->string);
+    temp = temp->next;
+  }
+  printf("============================\n");
+}
+
 void empty_headers() {
   struct Header *temp = head;
   struct Header *next;
@@ -105,8 +115,6 @@ void parse_headers(char *header_fields) {
     if (is_only_whitespace_or_escape(field)) {
       break;
     }
-    char f[strlen(field)];
-    strcpy(f, field);
     request_add_headerstring(field);
     if (strstr(field, "Content-Length") != NULL) {
       field = strtok(NULL, "?0");
@@ -114,6 +122,8 @@ void parse_headers(char *header_fields) {
       field = strtok(NULL, "\n");
     }
   }
+
+  print_headerstrings();
   // And then parse out the key value pairs
   struct HeaderString *temp = heads;
   while (temp != NULL) {

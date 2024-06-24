@@ -1,3 +1,4 @@
 build
 valgrind.log
 valgrind.log.*
+cmd

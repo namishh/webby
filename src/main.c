@@ -13,6 +13,7 @@ void start(struct Server *server) {
   int addrlen = sizeof(server->address);
   add_route("/", "index.html");
   add_route("/about", "about.html");
+  add_route("/based", "based.html");
   inorder();
   while (1) {
     printf("Waitng for connections...\n");
@@ -21,7 +22,7 @@ void start(struct Server *server) {
                         (socklen_t *)&addrlen);
     // read() -> read from a file descriptor
     read(new_socket, buffer, BUFFER_SIZE);
-    printf("===========Request========\n");
+    printf("===========BUFFER========\n");
     printf("%s\n", buffer);
     printf("==========================\n");
     struct Request request = request_constructor(buffer);
@@ -30,7 +31,6 @@ void start(struct Server *server) {
     printf("Body: %s\n", request.body);
 
     print_headers();
-
     char *status = "HTTP/1.1 200 OK\r\n\r\n";
     char *file;
 
@@ -46,16 +46,13 @@ void start(struct Server *server) {
       file = strdup(filename);
     }
 
-    struct Response response = response_constructor(status, file, request);
+    struct Response response =
+        response_constructor(status, file, request, status);
+
     printf("Status: %s\n", response.status);
     printf("Body: %s\n", response.body);
 
-    char *message = malloc(sizeof(unsigned char) * (strlen(response.status) +
-                                                    strlen(response.body) + 1));
-    sprintf(message, "%s%s", response.status, response.body);
-
-    // for the love of god never change the sizeof to sizein
-    send(new_socket, message, strlen(message), 0);
+    send(new_socket, response.body, response.size, 0);
 
     // close the new_socket
     close(new_socket);
