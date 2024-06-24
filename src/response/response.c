@@ -5,29 +5,27 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-char *render_file(char *filename) {
-  FILE *file = fopen(filename, "r");
-  fseek(file, 0, SEEK_END);
-  long fsize = ftell(file);
-  fseek(file, 0, SEEK_SET);
-
-  char *temp = malloc(sizeof(char) * (fsize + 1));
-  char ch;
-  int i = 0;
-  while ((ch = fgetc(file)) != EOF) {
-    temp[i] = ch;
-    i++;
-  }
-  fclose(file);
-  return temp;
-}
-
 const char *get_file_extension(const char *filepath) {
   const char *dot = strrchr(filepath, '.'); // Find the last occurrence of '.'
   if (!dot || dot == filepath)
     return ""; // No extension found or dot is the first character
 
   return dot + 1; // Return the extension (skip the dot character)
+}
+
+const char *get_mime_type(const char *file_ext) {
+  if (strcasecmp(file_ext, "html") == 0 || strcasecmp(file_ext, "htm") == 0) {
+    return "text/html";
+  } else if (strcasecmp(file_ext, "txt") == 0) {
+    return "text/plain";
+  } else if (strcasecmp(file_ext, "jpg") == 0 ||
+             strcasecmp(file_ext, "jpeg") == 0) {
+    return "image/jpeg";
+  } else if (strcasecmp(file_ext, "png") == 0) {
+    return "image/png";
+  } else {
+    return "application/octet-stream";
+  }
 }
 
 struct Response response_constructor(char *route, char *filename,
@@ -37,7 +35,8 @@ struct Response response_constructor(char *route, char *filename,
 
   size_t response_len = 0;
   char *response = (char *)malloc(BUFFER_SIZE * sizeof(char));
-  snprintf(header, BUFFER_SIZE, "%s", status);
+  snprintf(header, BUFFER_SIZE, "%sContent-Type:%s\r\n\r\n", status,
+           get_mime_type(get_file_extension(filename)));
 
   int file_fd = open(filename, O_RDONLY);
 

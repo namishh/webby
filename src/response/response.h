@@ -12,6 +12,5 @@ struct Response {
 
 struct Response response_constructor(char *route, char *filename,
                                      struct Request request, char *status);
-char *render_file(char *filename);
 
 #endif // RESPONSE_H

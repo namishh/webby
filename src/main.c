@@ -13,6 +13,9 @@ void start(struct Server *server) {
   int addrlen = sizeof(server->address);
   add_route("/", "index.html");
   add_route("/about", "about.html");
+  add_route("/200.jpg", "static/200.jpg");
+  add_route("/404.jpg", "static/404.jpg");
+  add_route("/secret", "text.txt");
   add_route("/based", "based.html");
   inorder();
   while (1) {
@@ -31,12 +34,12 @@ void start(struct Server *server) {
     printf("Body: %s\n", request.body);
 
     print_headers();
-    char *status = "HTTP/1.1 200 OK\r\n\r\n";
+    char *status = "HTTP/1.1 200 OK\r\n";
     char *file;
 
     struct Route *route = search(request.URI);
     if (route == NULL) {
-      status = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
+      status = "HTTP/1.1 404 NOT FOUND\r\n";
       file = "./public/404.html";
       printf("Route not found\n");
     } else {

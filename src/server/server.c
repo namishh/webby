@@ -26,8 +26,6 @@ struct Server server_constructor(int domain, int service, int protocol,
   domain -> communication domain service -> communication
   semantics protocol -> communication protocol
   */
-  int reuse = 1;
-
   server.sock = socket(domain, service, protocol);
 
   if (server.sock == 0) {
