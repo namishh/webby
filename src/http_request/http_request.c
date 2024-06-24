@@ -141,7 +141,6 @@ struct Request request_constructor(char *string) {
   char *request_line = strtok(string, "\n");
   char *header_fields =
       strtok(NULL, "|"); // NULL means continue using the line we were using
-  char *body = strtok(NULL, "\n");
   struct Request request;
 
   // stirng parsing :sob:
@@ -154,12 +153,19 @@ struct Request request_constructor(char *string) {
   request.method = method;
   request.URI = URI;
   request.HTTPVersion = (float)atof(HTTPVersion);
-  if (body == NULL) {
-    body = "";
-  }
-  request.body = strdup(body);
 
   parse_headers(header_fields);
+
+  if (strcmp(request.method, "POST") == 0) {
+    struct Header *contentheader = request_get_header("Content-Length");
+    printf("Content-Length: %s\n", contentheader->value);
+    if (contentheader == NULL) {
+      request.body = "";
+    }
+    request.body = contentheader->value;
+  }
+
+  request.body = "";
 
   request.request_headers_head = head;
   // print_headers();

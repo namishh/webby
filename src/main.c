@@ -27,6 +27,7 @@ void start(struct Server *server) {
     struct Request request = request_constructor(buffer);
     printf("Route: %s\n", request.URI);
     printf("Method: %s\n", request.method);
+    printf("Body: %s\n", request.body);
 
     print_headers();
 
