@@ -20,6 +20,7 @@ void start(struct Server *server) {
   add_route("/static/200.jpg", "static/200.jpg");
   add_route("/static/404.jpg", "static/404.jpg");
   add_route("/static/chad.webp", "static/chad.webp");
+  add_route("/static/dance.gif", "static/dance.gif");
 
   add_route("/static/style.css", "static/style.css");
   add_route("/static/app.js", "static/app.js");

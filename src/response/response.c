@@ -27,6 +27,8 @@ const char *get_mime_type(const char *file_ext) {
     return "image/jpeg";
   } else if (strcasecmp(file_ext, "png") == 0) {
     return "image/png";
+  } else if (strcasecmp(file_ext, "gif") == 0) {
+    return "image/gif";
   } else if (strcasecmp(file_ext, "webp") == 0) {
     return "image/webp";
   } else {

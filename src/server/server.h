@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 
 #define PORT 6969
-#define BUFFER_SIZE 2000000
+#define BUFFER_SIZE 5000000
 
 struct Server {
   int domain;

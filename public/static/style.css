@@ -5,6 +5,17 @@
 }
 
 body {
-  background: #eee;
+  background: #111;
+  color: #fff;
   padding: 2rem;
+}
+
+h1 { 
+  font-size: 2.3rem;
+  margin-bottom: 1rem;
+}
+
+img {
+  border-radius: 10px;
+  margin: 1rem 0;
 }
