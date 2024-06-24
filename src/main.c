@@ -24,6 +24,9 @@ void start(struct Server *server) {
 
     struct Request request = request_constructor(buffer);
     printf("Route: %s\n", request.URI);
+    printf("Method: %s\n", request.method);
+
+    print_headers();
 
     char *status = "HTTP/1.1 200 OK\r\n\r\n";
     char *file;
@@ -48,6 +51,7 @@ void start(struct Server *server) {
                                                     strlen(response.body) + 1));
     sprintf(message, "%s%s", response.status, response.body);
 
+    // for the love of god never change the sizeof to sizein
     send(new_socket, message, strlen(message), 0);
 
     // close the new_socket

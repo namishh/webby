@@ -20,6 +20,8 @@ char *render_file(char *filename) {
 
 struct Response response_constructor(char *status, char *filename,
                                      struct Request request) {
+  char *method = request.method;
+  char *body = request.body;
   struct Response response;
   response.status = status;
   response.body = render_file(filename);

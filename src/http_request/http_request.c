@@ -96,7 +96,9 @@ void parse_headers(char *header_fields) {
       break;
     }
     char *value = strtok(NULL, "\0");
-    request_add_header(key, value);
+    if (value != NULL) {
+      request_add_header(key, value);
+    }
     temp = temp->next;
   }
 }
@@ -133,6 +135,5 @@ struct Request request_constructor(char *string) {
 
   request.request_headers_head = head;
   // print_headers();
-
   return request;
 }
