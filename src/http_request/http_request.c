@@ -71,8 +71,32 @@ void print_headers() {
   printf("============================\n");
 }
 
+void empty_headers() {
+  struct Header *temp = head;
+  struct Header *next;
+  while (temp != NULL) {
+    next = temp->next;
+    free(temp);
+    temp = next;
+  }
+  head = NULL;
+}
+
+void empty_headerstrings() {
+  struct HeaderString *temp = heads;
+  struct HeaderString *next;
+  while (temp != NULL) {
+    next = temp->next;
+    free(temp);
+    temp = next;
+  }
+  heads = NULL;
+}
+
 // DONE: parse headers. i am blasting my head for this
 void parse_headers(char *header_fields) {
+  empty_headers();
+  empty_headerstrings();
   char fields[strlen(header_fields)];
   strcpy(fields, header_fields);
   char *field = strtok(fields, "\n");
@@ -84,7 +108,11 @@ void parse_headers(char *header_fields) {
     char f[strlen(field)];
     strcpy(f, field);
     request_add_headerstring(field);
-    field = strtok(NULL, "\n");
+    if (strstr(field, "Content-Length") != NULL) {
+      field = strtok(NULL, "?0");
+    } else {
+      field = strtok(NULL, "\n");
+    }
   }
   // And then parse out the key value pairs
   struct HeaderString *temp = heads;

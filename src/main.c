@@ -21,7 +21,9 @@ void start(struct Server *server) {
                         (socklen_t *)&addrlen);
     // read() -> read from a file descriptor
     read(new_socket, buffer, BUFFER_SIZE);
-
+    printf("===========Request========\n");
+    printf("%s\n", buffer);
+    printf("==========================\n");
     struct Request request = request_constructor(buffer);
     printf("Route: %s\n", request.URI);
     printf("Method: %s\n", request.method);
