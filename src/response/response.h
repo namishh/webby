@@ -10,7 +10,7 @@ struct Response {
   size_t size;
 };
 
-struct Response response_constructor(char *route, char *filename,
-                                     struct Request request, char *status);
+struct Response response_constructor(char *filename, struct Request request,
+                                     char *status, int is_json);
 
 #endif // RESPONSE_H

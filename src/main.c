@@ -24,6 +24,8 @@ void start(struct Server *server) {
   add_route("/static/style.css", "static/style.css");
   add_route("/static/app.js", "static/app.js");
 
+  add_route("/api", " ");
+
   inorder();
   while (1) {
     printf("Waitng for connections...\n");
@@ -43,8 +45,13 @@ void start(struct Server *server) {
     print_headers();
     char *status = "HTTP/1.1 200 OK\r\n";
     char *file;
+    int is_json = 0;
 
     struct Route *route = search(request.URI);
+    if (strstr(request.URI, "/api") != 0) {
+      file = " ";
+      is_json = 1;
+    }
     if (route == NULL) {
       status = "HTTP/1.1 404 NOT FOUND\r\n";
       file = "./public/404.html";
@@ -55,9 +62,9 @@ void start(struct Server *server) {
       printf("Route found %s\n", filename);
       file = strdup(filename);
     }
-
+    printf("is_json: %d\n", is_json);
     struct Response response =
-        response_constructor(status, file, request, status);
+        response_constructor(file, request, status, is_json);
 
     printf("Status: %s\n", response.status);
     printf("Body: %s\n", response.body);

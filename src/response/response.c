@@ -34,36 +34,47 @@ const char *get_mime_type(const char *file_ext) {
   }
 }
 
-struct Response response_constructor(char *route, char *filename,
-                                     struct Request request, char *status) {
+struct Response response_constructor(char *filename, struct Request request,
+                                     char *status, int is_json) {
   char *header = (char *)malloc(BUFFER_SIZE * sizeof(char));
   struct Response res;
 
   size_t response_len = 0;
-  char *response = (char *)malloc(BUFFER_SIZE * sizeof(char));
-  snprintf(header, BUFFER_SIZE, "%sContent-Type:%s\r\n\r\n", status,
-           get_mime_type(get_file_extension(filename)));
+  if (is_json != 1) {
+    char *response = (char *)malloc(BUFFER_SIZE * sizeof(char));
+    snprintf(header, BUFFER_SIZE, "%sContent-Type:%s\r\n\r\n", status,
+             get_mime_type(get_file_extension(filename)));
 
-  int file_fd = open(filename, O_RDONLY);
+    int file_fd = open(filename, O_RDONLY);
 
-  struct stat file_stat;
-  fstat(file_fd, &file_stat);
+    struct stat file_stat;
+    fstat(file_fd, &file_stat);
 
-  // copy header to response buffer
-  response_len = 0;
-  memcpy(response, header, strlen(header));
-  response_len += strlen(header);
+    // copy header to response buffer
+    response_len = 0;
+    memcpy(response, header, strlen(header));
+    response_len += strlen(header);
 
-  // copy file to response buffer
-  ssize_t bytes_read;
-  while ((bytes_read = read(file_fd, response + response_len,
-                            BUFFER_SIZE - response_len)) > 0) {
-    response_len += bytes_read;
+    // copy file to response buffer
+    ssize_t bytes_read;
+    while ((bytes_read = read(file_fd, response + response_len,
+                              BUFFER_SIZE - response_len)) > 0) {
+      response_len += bytes_read;
+    }
+    res.body = response;
+    res.size = response_len;
+    res.status = status;
+    close(file_fd);
+  } else {
+    char *response = (char *)malloc(BUFFER_SIZE * sizeof(char));
+    snprintf(header, BUFFER_SIZE,
+             "%sContent-Type: application/json\r\n\r\n{\"name\":\"Chad\"}",
+             status);
+    snprintf(response, BUFFER_SIZE, "%s", header);
+    res.body = response;
+    res.size = strlen(response);
+    res.status = status;
   }
-  res.body = response;
-  res.size = response_len;
-  res.status = status;
   return res;
   free(header);
-  close(file_fd);
 }
