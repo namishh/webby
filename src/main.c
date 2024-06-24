@@ -11,12 +11,19 @@ void start(struct Server *server) {
   char buffer[BUFFER_SIZE];
   int new_socket;
   int addrlen = sizeof(server->address);
+
   add_route("/", "index.html");
   add_route("/about", "about.html");
-  add_route("/200.jpg", "static/200.jpg");
-  add_route("/404.jpg", "static/404.jpg");
-  add_route("/secret", "text.txt");
+  add_route("/secret", "static/text.txt");
   add_route("/based", "based.html");
+
+  add_route("/static/200.jpg", "static/200.jpg");
+  add_route("/static/404.jpg", "static/404.jpg");
+  add_route("/static/chad.webp", "static/chad.webp");
+
+  add_route("/static/style.css", "static/style.css");
+  add_route("/static/app.js", "static/app.js");
+
   inorder();
   while (1) {
     printf("Waitng for connections...\n");

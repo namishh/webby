@@ -16,7 +16,7 @@ $ ./build/main.out
 - [ ] post requests 
 - [ ] fix getting content-length
 - [ ] somehow send json data
-- [ ] get css working
+- [x] get css and js working
 
 after that i would probably seem to make it a functional web app out of it. <br>
 something like a todo app. after deciding i will update this todo list for further goals.

@@ -1,0 +1,10 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: Lexend, sans-serif;
+}
+
+body {
+  background: #eee;
+  padding: 2rem;
+}
