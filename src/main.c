@@ -38,6 +38,7 @@ void start(struct Server *server) {
     new_socket = accept(server->sock, (struct sockaddr *)&server->address,
                         (socklen_t *)&addrlen);
     // read() -> read from a file descriptor
+    memset(buffer, 0, BUFFER_SIZE * sizeof(char));
     read(new_socket, buffer, BUFFER_SIZE);
 
     printf("===========BUFFER========\n");

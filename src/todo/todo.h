@@ -12,6 +12,7 @@ struct Todo {
 
 void seed_db();
 void insert_task(struct Todo todo);
+void delete_task(int id);
 char* get_task_in_json(int id);
 struct Todo *todo_from_json(char* json);
 char* get_all_tasks_in_json();

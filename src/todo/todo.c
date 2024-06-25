@@ -48,7 +48,7 @@ char *get_task_in_json(int id) {
       todo.is_completed = sqlite3_column_int(res, 3);
   char *json = (char *)malloc(100 * sizeof(char));
   sprintf(json, "{ message: \"Task found\",data: {\"id\":%d, \"task\":\"%s\", \"priority\":\"%s\", "
-                "\"is_completed\":\"%d\"}}",
+                "\"is_completed\":%d}}",
           todo.id, todo.task, todo.priority, todo.is_completed);
 
   return json;
@@ -73,17 +73,18 @@ char* get_all_tasks_in_json() {
     int id = sqlite3_column_int(res, 0);
     char *task = (char *)sqlite3_column_text(res, 1);
     char *priority = (char *)sqlite3_column_text(res, 2);
-    char *is_completed = (char *)sqlite3_column_text(res, 3);
+    char is_completed = sqlite3_column_int(res, 3);
     char *task_json = (char *)malloc(100 * sizeof(char));
     // do not put comma after last task 
     if (i == 1) {
       sprintf(task_json, "{\"id\":%d, \"task\":\"%s\", \"priority\":\"%s\", "
-                "\"is_completed\":\"%s\"}",
+                "\"is_completed\":%d}",
                 id, task, priority, is_completed);
     } else {
       // no comma at the beginnign of first task 
       sprintf(task_json, ",{\"id\":%d, \"task\":\"%s\", \"priority\":\"%s\", "
-                "\"is_completed\":\"%s\"}",
+                "\"is_completed\":%d}",
+
                 id, task, priority, is_completed);
     }
     i++;
@@ -188,15 +189,38 @@ struct Todo *todo_from_json(char *json) {
 }
 void update_task(int id, struct Todo todo) {
   char *err_msg = 0;
+  sqlite3_stmt *stmt;
   sqlite3_open(DB_FILE, &DB);
   char sql[100];
-  sprintf(sql, "UPDATE todos SET name='%s', priority='%s', is_completed='%d' "
+  printf("ID: %d\n", todo.is_completed);
+  sprintf(sql, "UPDATE todos SET name='%s', priority='%s', is_completed=%d "
+
                "WHERE id=%d;",
           todo.task, todo.priority, todo.is_completed, id);
+  int rc = sqlite3_prepare_v2(
+      DB, sql, -1, &stmt, NULL);
+
+  rc = sqlite3_step(stmt);
+  rc = sqlite3_step(stmt);
+
+  if (rc != SQLITE_DONE) {
+    fprintf(stderr, "Failed to execute statement: %s\n", sqlite3_errmsg(DB));
+    sqlite3_finalize(stmt);
+    sqlite3_close(DB);
+    return;
+  }
+
+  sqlite3_finalize(stmt);
+  sqlite3_close(DB);
+}
+
+void delete_task(int id) {
+  char *err_msg = 0;
+  sqlite3_open(DB_FILE, &DB);
+  char sql[100];
+  sprintf(sql, "DELETE FROM todos WHERE id=%d;", id);
   int rc = sqlite3_exec(DB, sql, 0, 0, &err_msg);
   if (rc != SQLITE_OK) {
     sqlite3_free(err_msg);
   }
 }
-
-

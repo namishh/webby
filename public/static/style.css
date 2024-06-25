@@ -114,3 +114,17 @@ ul li a {
   border-top: var(--size) solid white;
   top: 55%;
 }
+
+#todo-list {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  flex-direction: column;
+}
+
+.todo-element {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

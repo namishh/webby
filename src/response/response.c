@@ -75,12 +75,18 @@ struct Response response_constructor(char *filename, struct Request request,
 
     if (strcmp(method, "GET") == 0) {
       json = get_all_tasks_in_json();
-    } else if (strcmp(method, "POST") == 0){
-      printf("DATA: %s\n", data);
+    } else { 
       struct Todo *todo = todo_from_json(data);
-      printf("TASK: %s\n", todo->task);
+      if (strcmp(method, "POST") == 0){
       insert_task(*todo);
       json = "{ \"message\": \"Task created\" }";
+    } else if (strcmp(method, "DELETE") == 0){
+      delete_task(todo->id);
+      json = "{ \"message\": \"Task deleted\" }";
+    } else if (strcmp(method, "UPDATE") == 0){
+      update_task(todo->id , *todo);
+      json = "{ \"message\": \"Task updated\" }";
+    }
     }
       
     char *response = (char *)malloc(BUFFER_SIZE * sizeof(char));
@@ -95,3 +101,4 @@ struct Response response_constructor(char *filename, struct Request request,
   return res;
   free(header);
 }
+
