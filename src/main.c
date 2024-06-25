@@ -86,7 +86,7 @@ int main() {
   // AF_INET -> IPv4, SOCK_STREAM -> TCP, 0 -> protocol
   // BACKLOG -> number of connections that can be queued -> 10
   // INADDR_ANY -> any interface
-  //seed_db();
+  seed_db();
   printf("%s\n", get_all_tasks_in_json());
   struct Server server =
       server_constructor(AF_INET, SOCK_STREAM, 0, PORT, 10, INADDR_ANY, start);

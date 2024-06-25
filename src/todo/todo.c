@@ -12,7 +12,7 @@ void seed_db() {
   sqlite3_open(DB_FILE, &DB);
   int rc = sqlite3_exec(DB,
                         "CREATE TABLE IF NOT EXISTS todos (id BIGINT PRIMARY "
-                        "KEY, name TEXT, priorty TEXT, is_completed INT);",
+                        "KEY, name TEXT, priority TEXT, is_completed INT);",
                         0, 0, &err_msg);
   if (rc != SQLITE_OK) {
     sqlite3_free(err_msg);
@@ -192,7 +192,7 @@ void update_task(int id, struct Todo todo) {
   sqlite3_stmt *stmt;
   sqlite3_open(DB_FILE, &DB);
   char sql[100];
-  printf("ID: %d\n", todo.is_completed);
+  printf("SHOULD IT BE COMPLETE: %d\n", todo.is_completed);
   sprintf(sql, "UPDATE todos SET name='%s', priority='%s', is_completed=%d "
 
                "WHERE id=%d;",
@@ -200,7 +200,6 @@ void update_task(int id, struct Todo todo) {
   int rc = sqlite3_prepare_v2(
       DB, sql, -1, &stmt, NULL);
 
-  rc = sqlite3_step(stmt);
   rc = sqlite3_step(stmt);
 
   if (rc != SQLITE_DONE) {

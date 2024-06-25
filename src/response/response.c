@@ -75,17 +75,21 @@ struct Response response_constructor(char *filename, struct Request request,
 
     if (strcmp(method, "GET") == 0) {
       json = get_all_tasks_in_json();
+      status = "HTTP/1.1 200 OK\r\n";
     } else { 
       struct Todo *todo = todo_from_json(data);
       if (strcmp(method, "POST") == 0){
       insert_task(*todo);
       json = "{ \"message\": \"Task created\" }";
+      status = "HTTP/1.1 201 Created\r\n";
     } else if (strcmp(method, "DELETE") == 0){
       delete_task(todo->id);
       json = "{ \"message\": \"Task deleted\" }";
-    } else if (strcmp(method, "UPDATE") == 0){
+      status = "HTTP/1.1 204 No Content\r\n";
+    } else if (strcmp(method, "PUT") == 0){
       update_task(todo->id , *todo);
       json = "{ \"message\": \"Task updated\" }";
+      status = "HTTP/1.1 202 Accepted\r\n";
     }
     }
       
