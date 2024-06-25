@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -g
-LDFLAGS =
+LDFLAGS = -lsqlite3
 
 TARGET_EXEC := main.out
 

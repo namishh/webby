@@ -1,6 +1,6 @@
 simple web server in c.
 
-status: highly unstable but if it works, it works lol.
+status: kinda stable
 
 ### usage 
 
@@ -9,12 +9,24 @@ $ make
 $ ./build/main.out
 ```
 
+### so what is good about this server 
+- [x] it does not crash 
+- [x] it can serve html, css, js, images, etc
+- [x] it can reply with json as well
+- [x] can handle CRUD operations
+- [x] static routing
+
+### what is bad about this server
+- [ ] no dynamic routing
+- [ ] not multi-threaded
+- [ ] a somewhat bad implmentation of the routing
+
 ### todo / future plans
 - [x] fix the life of the server
 - [x] get requests 
 - [x] get it to render bytes
-- [ ] post requests 
-- [ ] fix getting content-length
+- [x] post requests 
+- [x] fix getting content-length
 - [x] somehow send json data
 - [x] get css and js working
 

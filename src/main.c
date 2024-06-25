@@ -2,6 +2,7 @@
 #include "response/response.h"
 #include "routing/routing.h"
 #include "server/server.h"
+#include "todo/todo.h"
 #include "string.h"
 #include <stdio.h>
 #include <sys/socket.h>
@@ -38,6 +39,7 @@ void start(struct Server *server) {
                         (socklen_t *)&addrlen);
     // read() -> read from a file descriptor
     read(new_socket, buffer, BUFFER_SIZE);
+
     printf("===========BUFFER========\n");
     printf("%s\n", buffer);
     printf("==========================\n");
@@ -50,7 +52,6 @@ void start(struct Server *server) {
     char *status = "HTTP/1.1 200 OK\r\n";
     char *file;
     int is_json = 0;
-
     struct Route *route = search(request.URI);
     if (strstr(request.URI, "/api") != 0) {
       file = " ";
@@ -84,6 +85,8 @@ int main() {
   // AF_INET -> IPv4, SOCK_STREAM -> TCP, 0 -> protocol
   // BACKLOG -> number of connections that can be queued -> 10
   // INADDR_ANY -> any interface
+  //seed_db();
+  printf("%s\n", get_all_tasks_in_json());
   struct Server server =
       server_constructor(AF_INET, SOCK_STREAM, 0, PORT, 10, INADDR_ANY, start);
 

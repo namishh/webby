@@ -1,5 +1,6 @@
 #include "response.h"
 #include "../server/server.h"
+#include "../todo/todo.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -68,10 +69,24 @@ struct Response response_constructor(char *filename, struct Request request,
     res.status = status;
     close(file_fd);
   } else {
+    char *data = request.body;
+    char *method = request.method;
+    char *json = (char *)malloc(1000 * sizeof(char));
+
+    if (strcmp(method, "GET") == 0) {
+      json = get_all_tasks_in_json();
+    } else if (strcmp(method, "POST") == 0){
+      printf("DATA: %s\n", data);
+      struct Todo *todo = todo_from_json(data);
+      printf("TASK: %s\n", todo->task);
+      insert_task(*todo);
+      json = "{ \"message\": \"Task created\" }";
+    }
+      
     char *response = (char *)malloc(BUFFER_SIZE * sizeof(char));
     snprintf(header, BUFFER_SIZE,
-             "%sContent-Type: application/json\r\n\r\n{\"name\":\"Chad\"}",
-             status);
+             "%sContent-Type: application/json\r\n\r\n%s",
+             status, json);
     snprintf(response, BUFFER_SIZE, "%s", header);
     res.body = response;
     res.size = strlen(response);

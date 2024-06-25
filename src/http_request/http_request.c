@@ -141,6 +141,15 @@ void parse_headers(char *header_fields) {
   }
 }
 
+char *get_last_line(char *str) {
+    char *last_newline = strrchr(str, '\n');
+    if (last_newline != NULL) {
+        return last_newline + 1;
+    } else {
+        return str;
+    }
+}
+
 struct Request request_constructor(char *string) {
   // seperate data and body
   for (int i = 0; i < strlen(string) - 1; i++) {
@@ -148,10 +157,12 @@ struct Request request_constructor(char *string) {
       string[i + 1] = '|';
     }
   }
+  char *dup = strdup(string);
   char *request_line = strtok(string, "\n");
   char *header_fields =
       strtok(NULL, "|"); // NULL means continue using the line we were using
   struct Request request;
+    char *body = "";
 
   // stirng parsing :sob:
   char *method = strtok(request_line, " ");
@@ -166,16 +177,11 @@ struct Request request_constructor(char *string) {
 
   parse_headers(header_fields);
 
-  if (strcmp(request.method, "POST") == 0) {
-    struct Header *contentheader = request_get_header("Content-Length");
-    printf("Content-Length: %s\n", contentheader->value);
-    if (contentheader == NULL) {
-      request.body = "";
-    }
-    request.body = contentheader->value;
+  if (strcmp(method, "GET") != 0) {
+    body = get_last_line(dup); 
   }
 
-  request.body = "";
+  request.body = body;
 
   request.request_headers_head = head;
   // print_headers();

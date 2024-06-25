@@ -9,17 +9,19 @@
 </head>
 
 <body>
+  <p>this is not a frontend only todo list. the backend code is written in C which saves the todos in a sqlite db</p>
   <form class="form" id="todo-form" method="#">
     <input autocomplete="off" type="text" id="todo-input" placeholder="What needs to be done?">
     <div class="custom-select">
-      <select>
-        <option value="low">Low</option>
-        <option value="high">Medium</option>
-        <option value="medium">High</option>
+      <select id="todo-priority">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
       </select>
     </div>
     <button type="submit">Add</button>
   </form>
+  <div id="todo-list"></div>
   <script src="/static/app.js"></script>
   <script src="/static/todo.js"></script>
 </body>
