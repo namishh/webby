@@ -19,7 +19,7 @@ $ ./build/main.out
 ### what is bad about this server
 - [ ] no dynamic routing
 - [ ] not multi-threaded
-- [ ] a somewhat bad implmentation of the routing
+- [ ] a somewhat bad implementation of the routing
 
 ### todo / future plans
 - [x] fix the life of the server
@@ -30,11 +30,13 @@ $ ./build/main.out
 - [x] somehow send json data
 - [x] get css and js working
 
-after that i would probably seem to make it a functional web app out of it. <br>
-something like a todo app. after deciding i will update this todo list for further goals.
+
+- [x] todo front end 
+- [x] todo back end 
+- [x] some how connect the front end and back end
 
 ### credits 
-- my friend [DitherWither](https://github.com/DitherWither) for helping me out with the code and his amazing [repo](https://github.com/DitherWither/etchteateapee/)/
+- my friend [DitherWither](https://github.com/DitherWither) for helping me out with the code and his amazing [repo](https://github.com/DitherWither/etchteateapee/) 
 - [Beej's guide to network programming](https://beej.us/guide/bgnet/html/) 
 - Eric O Meehan's [yt channel](https://www.youtube.com/@eom-dev)
 - [dev.to tutorial](https://dev.to/jeffreythecoder/how-i-built-a-simple-http-server-from-scratch-using-c-739) by [jeffreythecoder](https://dev.to/jeffreythecoder)
