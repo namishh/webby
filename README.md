@@ -2,6 +2,9 @@ simple web server in c.
 
 status: kinda stable
 
+
+https://github.com/chadcat7/webby/assets/68964499/1c9316c6-8bbf-421a-b996-80f9aeb34938
+
 ### usage 
 
 ```bash
